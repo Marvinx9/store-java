@@ -39,8 +39,8 @@ public class TestConfig implements CommandLineRunner {
         Product p3 = new Product(null, "Chicken Slaughter", "Chickens that are bred solely for meat production are generally poor egg layers because these birds are faster growing", 169.99, "");
         Product p4 = new Product(null, "Chicken Laying", "Day old chicks can be purchased from hatcheries or feed stores", 129.99, "");
 
-        Order o1 = new Order(null, Instant.parse("2025-06-14T19:53:07Z"), OrderStatus.WAITING_PAYMENT, u1);
-        Order o2 = new Order(null, Instant.parse("2025-06-14T19:10:07Z"), OrderStatus.PAID, u2);
+        Order o1 = new Order(null, Instant.parse("2025-06-14T19:53:07Z"), OrderStatus.PAID, u1);
+        Order o2 = new Order(null, Instant.parse("2025-06-14T19:10:07Z"), OrderStatus.WAITING_PAYMENT, u2);
         Order o3 = new Order(null, Instant.parse("2025-06-14T16:53:07Z"), OrderStatus.SHIPPED, u1);
 
         userRepository.saveAll(Arrays.asList(u1, u2));
@@ -63,5 +63,10 @@ public class TestConfig implements CommandLineRunner {
         OrderItem oi4 = new OrderItem(o3, p4, 2, p4.getPrice());
 
         orderItemRepository.saveAll(Arrays.asList(oi1, oi2, oi3, oi4));
+
+        Payment pay1 = new Payment(null, Instant.parse("2025-06-14T21:53:07Z"), o1);
+        o1.setPayment(pay1);
+
+        orderRepository.save(o1);
     }
 }
