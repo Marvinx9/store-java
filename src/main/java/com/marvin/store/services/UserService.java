@@ -4,6 +4,7 @@ import com.marvin.store.entities.User;
 import com.marvin.store.repositories.UserRepository;
 import com.marvin.store.services.exceptions.DataBaseException;
 import com.marvin.store.services.exceptions.ResourceNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.NonTransientDataAccessException;
@@ -32,9 +33,13 @@ public class UserService {
     }
 
     public User update(Long id, User obj){
-        User user = userRepository.getReferenceById(id);
-        updateData(user, obj);
-        return userRepository.save(user);
+        try {
+            User user = userRepository.getReferenceById(id);
+            updateData(user, obj);
+            return userRepository.save(user);
+        } catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException(id);
+        }
     }
 
     private void updateData(User user, User obj) {
